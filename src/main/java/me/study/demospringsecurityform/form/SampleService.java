@@ -1,5 +1,7 @@
 package me.study.demospringsecurityform.form;
 
+import me.study.demospringsecurityform.account.Account;
+import me.study.demospringsecurityform.account.AccountContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,5 +21,12 @@ public class SampleService {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities(); // 유저가 가지고 있는 권한
         Object credentials = authentication.getCredentials(); // credential
         boolean authenticated = authentication.isAuthenticated();
+    }
+
+
+    public Account getAccount() {
+        Account account = AccountContext.getAccount();
+        System.out.println(account.getUsername());
+        return account;
     }
 }

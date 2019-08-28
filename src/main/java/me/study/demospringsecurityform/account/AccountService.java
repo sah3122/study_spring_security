@@ -34,4 +34,5 @@ public class AccountService implements UserDetailsService { //userdetailsservice
         account.encodePassword(passwordEncoder); // {noop} 인코딩 spring에선 반드시 encoding해야함 encoder bean 등록 필수.
         return this.accountRepository.save(account);
     }
+    
 }
