@@ -1,5 +1,6 @@
 package me.study.demospringsecurityform.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
@@ -8,6 +9,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
@@ -20,6 +22,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // role 계층구조 설정.
     public AccessDecisionManager accessDecisionManager() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
@@ -34,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new AffirmativeBased(voters);
     }
 
+    // role 계층구조 설정.
     public SecurityExpressionHandler expressionHandler() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
@@ -45,13 +49,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        // permitall 을 사용해서 무시하는건 추천하지 않고 아래 방법이 더 효율적인 방법이다. spring security를 적용하지 않을건데requestmatcher를 사용하면 쓸모없는 filter를 타게 된다.
+        //web.ignoring().mvcMatchers("/favicon.ico"); //favicon만 ignore
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()); //정적 자원 모두 ignore
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .mvcMatchers("/", "/info", "/account/**").permitAll() // 모두 허용
+                .mvcMatchers("/", "/info", "/account/**").permitAll() // 모두 허용, 동적으로 처리하는 resource는 filter를 실행해야 한다.
                 .mvcMatchers("/admin").hasRole("ADMIN") // 어드민롤 있어야
                 .mvcMatchers("/user").hasRole("USER")
                 .anyRequest().authenticated() // 나머지는 인증된 사용자만 인가
                 //.accessDecisionManager(accessDecisionManager()) // custom accessdecision manager 사용, Role 계층 구조 적용
+                //.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // 해당방법은 추천하지 않음. 불필요한 filter를 실행시킴
                 .expressionHandler(expressionHandler()); // express handler 만 custom, Role hierarchy 사용위해
         http.formLogin(); // 폼로그인 사용
         // 메서드 체이닝을 사용하지 않아도 됨
