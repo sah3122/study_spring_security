@@ -2,6 +2,8 @@ package me.study.demospringsecurityform.form;
 
 import me.study.demospringsecurityform.account.Account;
 import me.study.demospringsecurityform.account.AccountContext;
+import me.study.demospringsecurityform.common.SecurityLogger;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,5 +36,11 @@ public class SampleService {
         Account account = AccountContext.getAccount();
         System.out.println(account.getUsername());
         return account;
+    }
+
+    @Async //기본적으로 async를 사용한곳에선 securitycontext공유가 되지 않는다. 공유 하려면 strategy를 설정해야한다. MODE_INHERITABLETHREADLOCAL
+    public void asyncService() {
+        SecurityLogger.log("async service");
+        System.out.println("Async service is called");
     }
 }
