@@ -22,7 +22,8 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+    // securitycontextpersistentfiler
+    // http session에서 기존에 저장되어있는 security context를 가져온다 async filter 다음 순서로 실행되는 filter
     // role 계층구조 설정.
     public AccessDecisionManager accessDecisionManager() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
