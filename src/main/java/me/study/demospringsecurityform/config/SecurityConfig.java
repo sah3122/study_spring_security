@@ -89,6 +89,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 메서드 체이닝을 사용하지 않아도 됨
         http.httpBasic();    // http basic 사용
 
+        http.logout() //logout 처리
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");
+                //.addLogoutHandler() logout handler 추가
+                //.invalidateHttpSession(); 세션을 만료 시킬것인지
+                // .deleteCookies("")쿠키 기반 인증시 설정
+
+
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 상위 쓰레드에서 하위 쓰레드까지의 securitycontext를 공유하기 위해 선언
 
     }
