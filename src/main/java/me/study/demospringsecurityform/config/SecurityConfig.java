@@ -25,6 +25,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // securitycontextpersistentfiler
     // http session에서 기존에 저장되어있는 security context를 가져온다 async filter 다음 순서로 실행되는 filter
     // role 계층구조 설정.
+
+    /**
+     * XContentTypeOptionsHeaderWriter 마임타입 스니핑 방어.
+     * XXssProtectionHeaderWriter 브라우저에 내장된 XSS 필터 적용.
+     * CacheControlHeadersWriter 캐시 히스토리 취약점 방어.
+     * HstsHeaderWriter HTTPS로만 소통하도록 강제
+     * XFrameOptionsHeaderWriter clickjacking 방어
+     *
+     */
+
     public AccessDecisionManager accessDecisionManager() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
