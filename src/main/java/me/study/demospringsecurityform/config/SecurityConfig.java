@@ -35,6 +35,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      *
      */
 
+    /**
+     * CsrfFilter
+     * CSRF  어택 방지 필터
+     * CSRF 토큰을 이용한 검증 진행
+     * form 기반의 application 에서는 사용권장, rest api 기반은 번거러울수 있음.
+     *
+     */
+
     public AccessDecisionManager accessDecisionManager() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
