@@ -78,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .mvcMatchers("/", "/info", "/account/**").permitAll() // 모두 허용, 동적으로 처리하는 resource는 filter를 실행해야 한다.
+                .mvcMatchers("/", "/info", "/account/**", "/signup").permitAll() // 모두 허용, 동적으로 처리하는 resource는 filter를 실행해야 한다.
                 .mvcMatchers("/admin").hasRole("ADMIN") // 어드민롤 있어야
                 .mvcMatchers("/user").hasRole("USER")
                 .anyRequest().authenticated() // 나머지는 인증된 사용자만 인가
