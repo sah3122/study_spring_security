@@ -112,6 +112,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.invalidateHttpSession(); 세션을 만료 시킬것인지
                 // .deleteCookies("")쿠키 기반 인증시 설정
 
+//        http.anonymous() anonymous 설정 관련 필터 Null Object Pattern 따름 실제 null이 아닌 null에 매칭되는 object를 사용하는 패턴
+//                .principal()
+//                .authorities()
+//                .key();
+
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 상위 쓰레드에서 하위 쓰레드까지의 securitycontext를 공유하기 위해 선언
 
