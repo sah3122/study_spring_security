@@ -86,7 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // 해당방법은 추천하지 않음. 불필요한 filter를 실행시킴
                 .expressionHandler(expressionHandler()); // express handler 만 custom, Role hierarchy 사용위해
         http.formLogin() // 폼로그인 사용
-            .loginPage("/siginin"); // custom login page 설정, defaultlogin / logout pagegeneratingfilter 사용하지 않음
+            .loginPage("/login")// custom login page 설정, defaultlogin / logout pagegeneratingfilter 사용하지 않음
+            .permitAll();
             //.usernameParameter("my-parameter") // parameter custom
             //.passwordParameter("my-password");
         // 메서드 체이닝을 사용하지 않아도 됨
