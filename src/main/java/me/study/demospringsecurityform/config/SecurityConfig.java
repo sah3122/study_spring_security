@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
@@ -47,6 +48,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * RequestCacheAwareFilter
      * 캐시된 요청이 있으면 해당 작업 후 캐시된 요청 처리하는 필터
      * dashboard 접근시 login 요청을 먼저 처리 하고 dashboard 요청 처리하게 해주는 필터
+     */
+
+    /**
+     * SessionManagementFilter
+     * 세션 변조 방지 전략 설정 sessionFixation
+     * changeSessionId (서블릿 3.1 이상 지원)
+     * migrateSession (서블릿 3.0 이하)
+     * 유효하지 않는 세션 리다이렉트
+     *
+     * 동시성 제어
+     * maximumSessions
+     * 추가 로그인을 막을지 여부 설정 (기본값 false)
+     *
+     * 세션 생성 전략 선언
+     *
+     * Spring Session -> session cluster project 참고
      */
 
     public AccessDecisionManager accessDecisionManager() {
@@ -117,6 +134,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .authorities()
 //                .key();
 
+        http.sessionManagement()
+                .invalidSessionUrl("/login")
+                .maximumSessions(1)
+                    .expiredUrl("/")//만료되었을때
+                    .maxSessionsPreventsLogin(false)
+                .and()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // rest api에서 사용하는 전략
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 상위 쓰레드에서 하위 쓰레드까지의 securitycontext를 공유하기 위해 선언
 
