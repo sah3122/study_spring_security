@@ -43,6 +43,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      *
      */
 
+    /**
+     * RequestCacheAwareFilter
+     * 캐시된 요청이 있으면 해당 작업 후 캐시된 요청 처리하는 필터
+     * dashboard 접근시 login 요청을 먼저 처리 하고 dashboard 요청 처리하게 해주는 필터
+     */
+
     public AccessDecisionManager accessDecisionManager() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
@@ -95,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         /**
          * basic authentication
          * Authorization: Basic sdaklmflsamfklas (username:password base64 인코딩된 값) 를 담아 보내는 방식
-         * curl localhost:8080 -u dong:123 
+         * curl localhost:8080 -u dong:123
          * 보안에 취약하기 때문에 https 사용 권장
          */
 
