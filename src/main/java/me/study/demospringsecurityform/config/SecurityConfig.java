@@ -92,6 +92,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             //.passwordParameter("my-password");
         // 메서드 체이닝을 사용하지 않아도 됨
         http.httpBasic();    // http basic 사용
+        /**
+         * basic authentication
+         * Authorization: Basic sdaklmflsamfklas (username:password base64 인코딩된 값) 를 담아 보내는 방식
+         * curl localhost:8080 -u dong:123 
+         * 보안에 취약하기 때문에 https 사용 권장
+         */
 
         http.logout() //logout 처리
                 .logoutUrl("/logout")
