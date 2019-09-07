@@ -1,5 +1,7 @@
 package me.study.demospringsecurityform.config;
 
+import me.study.demospringsecurityform.account.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
@@ -30,6 +33,8 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    AccountService accountService;
     // securitycontextpersistentfiler
     // http session에서 기존에 저장되어있는 security context를 가져온다 async filter 다음 순서로 실행되는 filter
     // role 계층구조 설정.
@@ -111,6 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/", "/info", "/account/**", "/signup").permitAll() // 모두 허용, 동적으로 처리하는 resource는 filter를 실행해야 한다.
                 .mvcMatchers("/admin").hasRole("ADMIN") // 어드민롤 있어야
                 .mvcMatchers("/user").hasRole("USER")
+                .mvcMatchers("/test").fullyAuthenticated() // rememberme 로 인증한 사용자도 해당 페이지 접근은 다시 인증 받아야하는 설정
                 .anyRequest().authenticated() // 나머지는 인증된 사용자만 인가
                 //.accessDecisionManager(accessDecisionManager()) // custom accessdecision manager 사용, Role 계층 구조 적용
                 //.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // 해당방법은 추천하지 않음. 불필요한 filter를 실행시킴
@@ -162,6 +168,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     httpServletResponse.sendRedirect("/access-denied");
                 });
                 //.accessDeniedPage("/access-denied");
+
+
+        http.rememberMe()
+                .rememberMeParameter("remember")
+                .userDetailsService(accountService)
+                .key("remember-me-sample");
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 상위 쓰레드에서 하위 쓰레드까지의 securitycontext를 공유하기 위해 선언
 
     }
