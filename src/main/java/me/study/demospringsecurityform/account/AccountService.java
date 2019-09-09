@@ -24,11 +24,12 @@ public class AccountService implements UserDetailsService { //userdetailsservice
             throw new UsernameNotFoundException(username);
         }
 
-        return User.builder() // spring security 에서 userdetails 객체를 user 객체를 이용해 만들수 있도록 제공 해당 객체가 principal이다.
-                .username(account.getUsername())
-                .password(account.getPassword())
-                .roles(account.getRole())
-                .build();
+//        return User.builder() // spring security 에서 userdetails 객체를 user 객체를 이용해 만들수 있도록 제공 해당 객체가 principal이다.
+//                .username(account.getUsername())
+//                .password(account.getPassword())
+//                .roles(account.getRole())
+//                .build();
+        return new UserAccount(account);
     }
 
     public Account createNew(Account account) {
