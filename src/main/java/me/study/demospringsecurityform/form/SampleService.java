@@ -4,11 +4,15 @@ import me.study.demospringsecurityform.account.Account;
 import me.study.demospringsecurityform.account.AccountContext;
 import me.study.demospringsecurityform.common.SecurityLogger;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Collection;
 
 /**
@@ -16,6 +20,10 @@ import java.util.Collection;
  */
 @Service
 public class SampleService {
+    @Secured("ROLE_USER") // 메소드 호출 전에 권한 검사 --- method security
+    @RolesAllowed("ROLE_USER") // 메소드 호출 전에 권한 검사 --- method security
+    @PreAuthorize("hasRole('USER')") // 메소드 호출 전에 권한 검사 --- method security
+    @PostAuthorize("hasRole('USER')") // 메소드 호출 후에 권한 검사 --- method security
     public void dashboard() {
         //인증은 authencationmanager에서 처리하고 인증된 정보를 securitycontextholder에서 가지고 있다.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //securitycontextholder에서 authentication을 꺼낼수 있다.
